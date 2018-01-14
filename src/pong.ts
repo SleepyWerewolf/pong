@@ -18,10 +18,17 @@ export default class Pong {
 
     this.ball = ball;
 
-    this.players = [
-      new Player(),
-      new Player()
-    ];
+    const middle = this.canvas.height / 2;
+
+    const player1 = new Player();
+    player1.position.x = 40;
+    player1.position.y = middle;
+
+    const player2 = new Player();
+    player2.position.x = this.canvas.width - 40;
+    player2.position.y = middle;
+
+    this.players = [ player1, player2 ];
   }
 
   init(): void {
@@ -41,11 +48,11 @@ export default class Pong {
     }
   }
 
-  private drawGameObject({ position, size }: GameObject): void {
+  private drawGameObject({ left, top, size: { x, y } }: GameObject): void {
     const { context } = this;
 
     context.fillStyle = GAME_OBJECT_COLOR;
-    context.fillRect(position.x, position.y, size.x, size.y);
+    context.fillRect(left, top, x, y);
   }
 
   private drawFrame(): void {
