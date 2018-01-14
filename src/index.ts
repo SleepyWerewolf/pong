@@ -11,6 +11,6 @@ const ball = new Ball;
 ball.position.x = 10;
 ball.position.y = 25;
 ball.velocity.x = 100;
-ball.velocity.y = 5;
+ball.velocity.y = 100;
 
 animate(ball, context);

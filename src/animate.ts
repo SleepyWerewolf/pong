@@ -1,6 +1,10 @@
-function updateItem(delta: Number, item, context) {
-  item.position.x += item.velocity.x * delta;
-  item.position.y += item.velocity.y * delta;
+import generateNewPosition from './generateNewPosition';
+
+function updateItem(delta: number, item, context) {
+  const { x, y } = generateNewPosition(delta, item, context);
+
+  item.position.x = x;
+  item.position.y = y;
 
   context.fillStyle = '#000';
   context.fillRect(0, 0, context.canvas.width, context.canvas.height);
