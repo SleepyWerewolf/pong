@@ -1,9 +1,10 @@
-import { Ball } from './shapes';
-
+import { Ball, Player, GameObject } from './game-objects';
+import { GAME_OBJECT_COLOR, BACKGROUND_COLOR } from './constants';
 export default class Pong {
   private canvas: HTMLCanvasElement;
-  private context;
+  private context: CanvasRenderingContext2D;
   private ball: Ball;
+  private players: Array<Player>;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -16,9 +17,14 @@ export default class Pong {
     ball.velocity.y = 100;
 
     this.ball = ball;
+
+    this.players = [
+      new Player(),
+      new Player()
+    ];
   }
 
-  init() {
+  init(): void {
     this.animate();
   }
 
@@ -35,22 +41,31 @@ export default class Pong {
     }
   }
 
+  private drawGameObject({ position, size }: GameObject): void {
+    const { context } = this;
+
+    context.fillStyle = GAME_OBJECT_COLOR;
+    context.fillRect(position.x, position.y, size.x, size.y);
+  }
+
   private drawFrame(): void {
     const { context, ball } = this;
 
     // Draw background
-    context.fillStyle = '#000';
+    context.fillStyle = BACKGROUND_COLOR;
     context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
+    // Draw players
+    this.players.forEach(player => this.drawGameObject(player));
+
     // Draw ball
-    context.fillStyle = '#fff';
-    context.fillRect(ball.position.x, ball.position.y, ball.size.x, ball.size.y);
+    this.drawGameObject(this.ball);
   }
 
-  private animate() {
+  private animate(): void {
     let lastTime;
 
-    const rafCallback = (ms: number) => {
+    const rafCallback = (ms: number): void => {
       if (lastTime) {
         this.updateBall((ms - lastTime) / 1000);
         this.drawFrame();

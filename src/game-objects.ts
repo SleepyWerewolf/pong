@@ -1,6 +1,14 @@
-import Vector from './vector';
+export default class Vector {
+  x: number;
+  y: number;
 
-export class Rectangle {
+  constructor(x: number = 0, y: number = 0) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+export class GameObject {
   position: Vector;
   size: Vector;
 
@@ -26,11 +34,20 @@ export class Rectangle {
   }
 }
 
-export class Ball extends Rectangle {
+export class Ball extends GameObject {
   velocity: Vector;
 
   constructor() {
     super(10, 10);
     this.velocity = new Vector();
+  }
+}
+
+export class Player extends GameObject {
+  private score: number;
+
+  constructor() {
+    super(20, 100);
+    this.score = 0;
   }
 }

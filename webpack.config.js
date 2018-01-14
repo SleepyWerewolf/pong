@@ -1,6 +1,6 @@
 module.exports = {
   devtool: 'inline-source-map',
-  entry: './src/index.ts',
+  entry: './src/app.ts',
   output: {
     path: `${__dirname}/public/`,
     filename: 'index.js'
