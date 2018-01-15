@@ -48,7 +48,11 @@ export default class Pong {
     }
   }
 
-  private drawGameObject({ left, top, size: { x, y } }: GameObject): void {
+  private drawGameObject({
+    left,
+    top,
+    size: { x, y }
+  }: GameObject): void {
     const { context } = this;
 
     context.fillStyle = GAME_OBJECT_COLOR;
@@ -56,7 +60,7 @@ export default class Pong {
   }
 
   private drawFrame(): void {
-    const { context, ball } = this;
+    const { context } = this;
 
     // Draw background
     context.fillStyle = BACKGROUND_COLOR;
