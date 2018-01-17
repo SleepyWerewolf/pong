@@ -1,11 +1,17 @@
-import { Ball, Player, GameObject } from './game-objects';
-import { GAME_OBJECT_COLOR, BACKGROUND_COLOR } from './constants';
+import Ball from './objects/ball';
+import Player from './objects/player';
+import GameObject from './objects/game-objects';
+import Input from './services/input';
+
+const BACKGROUND_COLOR = <string>'#000';
+const GAME_OBJECT_COLOR = <string>'#fff';
 
 export default class Pong {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
   private ball: Ball;
   private players: Array<Player>;
+  private input: Input;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -21,19 +27,45 @@ export default class Pong {
 
     const middle = this.canvas.height / 2;
 
-    const player1 = new Player();
+    const player1 = new Player(1);
     player1.position.x = 40;
     player1.position.y = middle;
 
-    const player2 = new Player();
+    const player2 = new Player(2);
     player2.position.x = this.canvas.width - 40;
     player2.position.y = middle;
+
+    const input = new Input();
+    input.addListener(player1);
+    input.addListener(player2);
 
     this.players = [ player1, player2 ];
   }
 
   init(): void {
     this.animate();
+  }
+
+  private updateState(state): void {
+    this.updateBall(state.delta);
+    this.updatePlayers();
+  }
+
+  private updatePlayers(): void {
+    this.players.forEach(player => {
+      let newPosition = player.position.y;
+      const { pressedKeys } = player;
+
+      if (pressedKeys.up) {
+        newPosition -= 10;
+      } else if (pressedKeys.down) {
+        newPosition += 10;
+      }
+
+      if (newPosition - 50 > 0 && newPosition + 50 < this.canvas.height) {
+        player.position.y = newPosition;
+      }
+    });
   }
 
   private updateBall(delta: number): void {
@@ -79,7 +111,7 @@ export default class Pong {
 
     const rafCallback = (ms: number): void => {
       if (lastTime) {
-        this.updateBall((ms - lastTime) / 1000);
+        this.updateState({ delta: (ms - lastTime) / 1000 });
         this.drawFrame();
       }
 
