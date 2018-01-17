@@ -6,6 +6,12 @@ import Input from './services/input';
 const BACKGROUND_COLOR = <string>'#000';
 const GAME_OBJECT_COLOR = <string>'#fff';
 
+/**
+ * Once initialized, the Pong object starts an animation loop
+ * that does 2 things every loop:
+ *  1. Update the game state (i.e. state of ball and players)
+ *  2. Draw a new frame
+ */
 export default class Pong {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
