@@ -3,8 +3,9 @@ import Player from './objects/player';
 import GameObject from './objects/game-objects';
 import Input from './services/input';
 
-const BACKGROUND_COLOR = <string>'#000';
-const GAME_OBJECT_COLOR = <string>'#fff';
+const BACKGROUND_COLOR = <string> '#000';
+const GAME_OBJECT_COLOR = <string> '#fff';
+const PLAYER_SPEED = <number> 5;
 
 /**
  * Once initialized, the Pong object starts an animation loop
@@ -63,9 +64,9 @@ export default class Pong {
       const { pressedKeys } = player;
 
       if (pressedKeys.up) {
-        newPosition -= 10;
+        newPosition -= PLAYER_SPEED;
       } else if (pressedKeys.down) {
-        newPosition += 10;
+        newPosition += PLAYER_SPEED;
       }
 
       if (newPosition - 50 > 0 && newPosition + 50 < this.canvas.height) {
@@ -74,7 +75,7 @@ export default class Pong {
     });
   }
 
-  private isColliding(player, ball) {
+  private isColliding(player, ball): boolean {
     return player.left < ball.right
       && player.right > ball.left
       && player.top < ball.bottom
