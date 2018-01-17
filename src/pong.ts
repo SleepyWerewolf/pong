@@ -1,5 +1,6 @@
 import { Ball, Player, GameObject } from './game-objects';
 import { GAME_OBJECT_COLOR, BACKGROUND_COLOR } from './constants';
+
 export default class Pong {
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
