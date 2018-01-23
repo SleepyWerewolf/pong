@@ -19,14 +19,15 @@ export default class Pong {
   private ball: Ball;
   private players: Array<Player>;
   private input: Input;
+  private scores: Array<number>;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
 
     const ball = new Ball();
-    ball.position.x = 10;
-    ball.position.y = 25;
+    ball.position.x = canvas.width / 2;
+    ball.position.y = canvas.height / 2;
     ball.velocity.x = 300;
     ball.velocity.y = 100;
 
@@ -46,7 +47,8 @@ export default class Pong {
     input.addListener(player1);
     input.addListener(player2);
 
-    this.players = [ player1, player2 ];
+    this.scores = [0, 0]
+    this.players = [player1, player2];
   }
 
   init(): void {
@@ -82,14 +84,22 @@ export default class Pong {
       && player.bottom > ball.top;
   }
 
+  private updateScore(ballVelocity: number): void {
+    const playerThatScored = ballVelocity > 0 ? 0 : 1;
+    this.scores[playerThatScored] += 1;
+    console.log(this.scores);
+  }
+
   private updateBall(delta: number): void {
     this.ball.position.x += this.ball.velocity.x * delta;
     this.ball.position.y += this.ball.velocity.y * delta;
 
     // Horizontal boundary check
     if (this.ball.left < 0 || this.ball.right > this.context.canvas.width) {
-      // @TODO: replace this with score mechanism
+      this.updateScore(this.ball.velocity.x);
       this.ball.velocity.x *= -1;
+      this.ball.position.x = this.canvas.width / 2;
+      this.ball.position.y = this.canvas.height / 2;
     }
 
     // Vertical boundary check
@@ -98,8 +108,9 @@ export default class Pong {
     }
 
     // Collision detection
-    if (this.isColliding(
-      this.players[0], this.ball) || this.isColliding(this.players[1], this.ball)
+    if (
+      this.isColliding(this.players[0], this.ball) ||
+      this.isColliding(this.players[1], this.ball)
     ) {
       this.ball.velocity.x *= -1;
     }

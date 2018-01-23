@@ -13,9 +13,9 @@ const PLAYER_KEY_MAP = {
 };
 
 export default class Player extends GameObject {
-  private id: number;
+  readonly id: number;
 
-  private score: number = 0;
+  readonly score: number = 0;
 
   pressedKeys = {
     up: false,
