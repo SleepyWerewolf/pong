@@ -6,6 +6,13 @@ import Input from './services/input';
 const BACKGROUND_COLOR = <string> '#000';
 const GAME_OBJECT_COLOR = <string> '#fff';
 const PLAYER_SPEED = <number> 5;
+const BALL_HORIZONTAL_SPEED = <number> 300;
+const BALL_VERTICAL_SPEED = <number> 100;
+const START_ROUND_TIMEOUT = <number> 4000;
+
+function generateDirection(): number {
+  return (Math.random() > .5 ? 1 : -1);
+}
 
 /**
  * Once initialized, the Pong object starts an animation loop
@@ -26,12 +33,8 @@ export default class Pong {
     this.context = canvas.getContext('2d');
 
     const ball = new Ball();
-    ball.position.x = canvas.width / 2;
-    ball.position.y = canvas.height / 2;
-    ball.velocity.x = 300;
-    ball.velocity.y = 100;
-
     this.ball = ball;
+    this.resetRound();
 
     const middle = this.canvas.height / 2;
 
@@ -49,6 +52,8 @@ export default class Pong {
 
     this.scores = [0, 0]
     this.players = [player1, player2];
+
+    this.startRound();
   }
 
   init(): void {
@@ -90,6 +95,30 @@ export default class Pong {
     console.log(this.scores);
   }
 
+  private resetRound(): void {
+    this.ball.velocity.x = 0;
+    this.ball.velocity.y = 0;
+    this.ball.position.x = this.canvas.width / 2;
+    this.ball.position.y = this.canvas.height / 2;
+  }
+
+  private startRound(): void {
+    let secondsLeft = 3;
+    const intervalId = setInterval(() => {
+      if (secondsLeft === 0) {
+        console.log('GO!!!');
+      } else {
+        console.log(secondsLeft--);
+      }
+    }, 1000);
+
+    setTimeout(() => {
+      this.ball.velocity.x = BALL_HORIZONTAL_SPEED * generateDirection();
+      this.ball.velocity.y = BALL_VERTICAL_SPEED * generateDirection();
+      clearInterval(intervalId);
+    }, START_ROUND_TIMEOUT);
+  }
+
   private updateBall(delta: number): void {
     this.ball.position.x += this.ball.velocity.x * delta;
     this.ball.position.y += this.ball.velocity.y * delta;
@@ -97,9 +126,8 @@ export default class Pong {
     // Horizontal boundary check
     if (this.ball.left < 0 || this.ball.right > this.context.canvas.width) {
       this.updateScore(this.ball.velocity.x);
-      this.ball.velocity.x *= -1;
-      this.ball.position.x = this.canvas.width / 2;
-      this.ball.position.y = this.canvas.height / 2;
+      this.resetRound();
+      this.startRound();
     }
 
     // Vertical boundary check
